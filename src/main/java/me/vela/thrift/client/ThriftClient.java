@@ -7,8 +7,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
@@ -17,7 +22,6 @@ import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
 import me.vela.thrift.client.pool.ThriftServerInfo;
 import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -29,6 +33,8 @@ import org.apache.thrift.transport.TTransport;
  * @date 2014年7月14日 下午5:01:17
  */
 public class ThriftClient {
+
+    private static ConcurrentMap<Class<?>, Set<String>> interfaceMethodCache = new ConcurrentHashMap<>();
 
     private final ThriftConnectionPoolProvider poolProvider;
 
@@ -77,15 +83,15 @@ public class ThriftClient {
 
         ProxyFactory factory = new ProxyFactory();
         factory.setSuperclass(ifaceClass);
+        Set<String> interfaceMethodNames = interfaceMethodCache.computeIfAbsent(
+                ifaceClass,
+                t -> Stream.of(t.getInterfaces()).flatMap(i -> Stream.of(i.getMethods()))
+                        .map(Method::getName).collect(Collectors.toSet()));
         factory.setFilter(m -> {
             if (m.getName().equals("finalize")) {
                 return false;
             }
-            if (StringUtils.endsWith(m.getDeclaringClass().getName(), "$Client")) {
-                return !m.getName().startsWith("send") && !m.getName().startsWith("recv");
-            } else {
-                return false;
-            }
+            return interfaceMethodNames.contains(m.getName());
         });
         MethodHandler handler = new MethodHandler() {
 
@@ -116,5 +122,4 @@ public class ThriftClient {
             throw new RuntimeException("fail to create proxy.", e);
         }
     }
-
 }
