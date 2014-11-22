@@ -43,7 +43,7 @@ public class TestThriftPoolClient {
             int counter = i;
             executorService.submit(() -> {
                 try {
-                    String result = client.iface(Client::new).echo("hi " + counter + "!");
+                    String result = client.iface(Client.class).echo("hi " + counter + "!");
                     logger.info("get result: {}", result);
                 } catch (Throwable e) {
                     logger.error("get client fail", e);

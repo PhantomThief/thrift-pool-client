@@ -65,6 +65,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
                     config.setTestOnBorrow(true);
                     config.setMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
                     config.setSoftMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
+                    config.setJmxEnabled(false);
                     defaultInstance = new DefaultThriftConnectionPoolImpl(config);
                 }
             }

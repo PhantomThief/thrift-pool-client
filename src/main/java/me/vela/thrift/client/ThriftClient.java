@@ -3,18 +3,21 @@
  */
 package me.vela.thrift.client;
 
-import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.Proxy;
+import javassist.util.proxy.ProxyFactory;
 import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
 import me.vela.thrift.client.pool.ThriftServerInfo;
 import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -50,16 +53,16 @@ public class ThriftClient {
         this.servicesInfoProvider = servicesInfoProvider;
     }
 
-    public <X extends TServiceClient> X iface(Function<TProtocol, X> clientConstructor) {
-        return iface(clientConstructor, random.nextInt());
+    public <X extends TServiceClient> X iface(Class<X> ifaceClass) {
+        return iface(ifaceClass, random.nextInt());
     }
 
-    public <X extends TServiceClient> X iface(Function<TProtocol, X> clientConstructor, int hash) {
-        return iface(clientConstructor, TCompactProtocol::new, hash);
+    public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash) {
+        return iface(ifaceClass, TCompactProtocol::new, hash);
     }
 
     @SuppressWarnings("unchecked")
-    public <X extends TServiceClient> X iface(Function<TProtocol, X> clientConstructor,
+    public <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash) {
         List<ThriftServerInfo> servers = servicesInfoProvider.get();
         if (servers == null || servers.isEmpty()) {
@@ -71,16 +74,27 @@ public class ThriftClient {
 
         TTransport transport = poolProvider.getConnection(selected);
         TProtocol protocol = protocolProvider.apply(transport);
-        X client = clientConstructor.apply(protocol);
 
-        return (X) Proxy.newProxyInstance(ThriftClient.class.getClassLoader(), client.getClass()
-                .getInterfaces(), new InvocationHandler() {
+        ProxyFactory factory = new ProxyFactory();
+        factory.setSuperclass(ifaceClass);
+        factory.setFilter(m -> {
+            if (m.getName().equals("finalize")) {
+                return false;
+            }
+            if (StringUtils.endsWith(m.getDeclaringClass().getName(), "$Client")) {
+                return !m.getName().startsWith("send") && !m.getName().startsWith("recv");
+            } else {
+                return false;
+            }
+        });
+        MethodHandler handler = new MethodHandler() {
 
             @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args)
+                    throws Throwable {
                 boolean success = false;
                 try {
-                    Object result = method.invoke(proxy, args);
+                    Object result = proceed.invoke(self, args);
                     success = true;
                     return result;
                 } finally {
@@ -91,7 +105,16 @@ public class ThriftClient {
                     }
                 }
             }
-        });
+        };
+        try {
+            X x = (X) factory.create(new Class[] { org.apache.thrift.protocol.TProtocol.class },
+                    new Object[] { protocol });
+            ((Proxy) x).setHandler(handler);
+            return x;
+        } catch (NoSuchMethodException | IllegalArgumentException | InstantiationException
+                | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("fail to create proxy.", e);
+        }
     }
 
 }

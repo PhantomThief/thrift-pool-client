@@ -13,6 +13,7 @@ A Thrift Client pool for Java
 ## Usage
 
 <pre><code>
+
         // define serverList provider, you can use dynamic provider here to impl on the fly changing...
         Supplier<List<ThriftServerInfo>> serverListProvider = () -> Arrays.asList( //
                 new ThriftServerInfo("127.0.0.1", 9092), //
@@ -23,7 +24,7 @@ A Thrift Client pool for Java
         ThriftClient client = new ThriftClient(serverListProvider);
 
         // do call as normal
-        String result = client.iface(me.vela.thrift.test.service.TestThriftService.Client::new)
+        String result = client.iface(me.vela.thrift.test.service.TestThriftService.Client.class)
                 .echo("haha");
         System.out.println(result);
 
@@ -33,7 +34,7 @@ A Thrift Client pool for Java
                 new DefaultThriftConnectionPoolImpl(poolConfig));
         String param = "hello";
         // customize server hash
-        String result2 = client.iface(me.vela.thrift.test.service.TestThriftService.Client::new,
+        String result2 = client.iface(me.vela.thrift.test.service.TestThriftService.Client.class,
                 param.hashCode()).echo(param);
         System.out.println(result2);
     
