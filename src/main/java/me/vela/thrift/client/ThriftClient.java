@@ -95,10 +95,16 @@ public class ThriftClient {
         });
         MethodHandler handler = new MethodHandler() {
 
+            private Boolean success;
+
             @Override
             public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args)
                     throws Throwable {
-                boolean success = false;
+                if (success != null) {
+                    throw new RuntimeException(
+                            "recall iface to get a new connection, you cannot reuse iface.");
+                }
+                success = false;
                 try {
                     Object result = proceed.invoke(self, args);
                     success = true;
