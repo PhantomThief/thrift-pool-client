@@ -4,6 +4,7 @@
 package me.vela.thrift.client.pool.impl;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
 import me.vela.thrift.client.pool.ThriftServerInfo;
@@ -24,6 +25,9 @@ import org.apache.thrift.transport.TTransport;
  */
 public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPoolProvider {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
+            .getLogger(DefaultThriftConnectionPoolImpl.class);
+
     private static final int MIN_CONN = 1;
 
     private static final int MAX_CONN = 1000;
@@ -32,8 +36,19 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
 
     private final GenericKeyedObjectPool<ThriftServerInfo, TTransport> connections;
 
+    public DefaultThriftConnectionPoolImpl(GenericKeyedObjectPoolConfig config,
+            Function<ThriftServerInfo, TTransport> transportProvider) {
+        connections = new GenericKeyedObjectPool<>(new ThriftConnectionFactory(transportProvider),
+                config);
+    }
+
     public DefaultThriftConnectionPoolImpl(GenericKeyedObjectPoolConfig config) {
-        connections = new GenericKeyedObjectPool<>(new ThriftConnectionFactory(), config);
+        this(config, info -> {
+            TSocket tsocket = new TSocket(info.getHost(), info.getPort());
+            tsocket.setTimeout(TIMEOUT);
+            TFramedTransport transport = new TFramedTransport(tsocket);
+            return transport;
+        });
     }
 
     private static volatile DefaultThriftConnectionPoolImpl defaultInstance;
@@ -57,19 +72,24 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
         return defaultInstance;
     }
 
-    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
-
-    private final class ThriftConnectionFactory implements
+    public static final class ThriftConnectionFactory implements
             KeyedPooledObjectFactory<ThriftServerInfo, TTransport> {
+
+        private final Function<ThriftServerInfo, TTransport> transportProvider;
+
+        /**
+         * @param transportProvider
+         */
+        public ThriftConnectionFactory(Function<ThriftServerInfo, TTransport> transportProvider) {
+            this.transportProvider = transportProvider;
+        }
 
         /* (non-Javadoc)
          * @see org.apache.commons.pool2.PooledObjectFactory#makeObject()
          */
         @Override
         public PooledObject<TTransport> makeObject(ThriftServerInfo info) throws Exception {
-            TSocket tsocket = new TSocket(info.getHost(), info.getPort());
-            tsocket.setTimeout(TIMEOUT);
-            TFramedTransport transport = new TFramedTransport(tsocket);
+            TTransport transport = transportProvider.apply(info);
             transport.open();
             DefaultPooledObject<TTransport> result = new DefaultPooledObject<>(transport);
             logger.info("make new thrift connection:{}", info);

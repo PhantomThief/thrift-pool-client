@@ -13,7 +13,7 @@ A Thrift Client pool for Java
 ## Usage
 
 <pre><code>
-            // define serverList provider, you can use dynamic provider here to impl on the fly changing...
+        // define serverList provider, you can use dynamic provider here to impl on the fly changing...
         Supplier<List<ThriftServerInfo>> serverListProvider = () -> Arrays.asList( //
                 new ThriftServerInfo("127.0.0.1", 9092), //
                 new ThriftServerInfo("127.0.0.1", 9091), //

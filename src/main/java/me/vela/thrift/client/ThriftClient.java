@@ -54,8 +54,13 @@ public class ThriftClient {
         return iface(clientConstructor, random.nextInt());
     }
 
-    @SuppressWarnings("unchecked")
     public <X extends TServiceClient> X iface(Function<TProtocol, X> clientConstructor, int hash) {
+        return iface(clientConstructor, TCompactProtocol::new, hash);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <X extends TServiceClient> X iface(Function<TProtocol, X> clientConstructor,
+            Function<TTransport, TProtocol> protocolProvider, int hash) {
         List<ThriftServerInfo> servers = servicesInfoProvider.get();
         if (servers == null || servers.isEmpty()) {
             throw new RuntimeException("no backend server.");
@@ -65,7 +70,7 @@ public class ThriftClient {
         ThriftServerInfo selected = servers.get(hash % servers.size());
 
         TTransport transport = poolProvider.getConnection(selected);
-        TProtocol protocol = new TCompactProtocol(transport);
+        TProtocol protocol = protocolProvider.apply(transport);
         X client = clientConstructor.apply(protocol);
 
         return (X) Proxy.newProxyInstance(ThriftClient.class.getClassLoader(), client.getClass()
