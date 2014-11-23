@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyFactory;
 import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
@@ -43,15 +42,15 @@ public class ThriftClient {
     private final Random random = new Random();
 
     /**
-     * @param servicesInfoProvider
+     * @param servicesInfoProvider provide service list
      */
     public ThriftClient(Supplier<List<ThriftServerInfo>> servicesInfoProvider) {
         this(servicesInfoProvider, DefaultThriftConnectionPoolImpl.getInstance());
     }
 
     /**
-     * @param servicesInfoProvider
-     * @param poolProvider
+     * @param servicesInfoProvider provide service list
+     * @param poolProvider provide a pool
      */
     public ThriftClient(Supplier<List<ThriftServerInfo>> servicesInfoProvider,
             ThriftConnectionPoolProvider poolProvider) {
@@ -59,14 +58,29 @@ public class ThriftClient {
         this.servicesInfoProvider = servicesInfoProvider;
     }
 
+    /**
+     * @param ifaceClass
+     * @return proxied iface class
+     */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass) {
         return iface(ifaceClass, random.nextInt());
     }
 
+    /**
+     * @param ifaceClass
+     * @param hash
+     * @return proxied iface class
+     */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash) {
         return iface(ifaceClass, TCompactProtocol::new, hash);
     }
 
+    /**
+     * @param ifaceClass
+     * @param protocolProvider
+     * @param hash
+     * @return proxied iface class
+     */
     @SuppressWarnings("unchecked")
     public <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash) {
@@ -83,28 +97,15 @@ public class ThriftClient {
 
         ProxyFactory factory = new ProxyFactory();
         factory.setSuperclass(ifaceClass);
-        Set<String> interfaceMethodNames = interfaceMethodCache.computeIfAbsent(
+        factory.setFilter(m -> interfaceMethodCache.computeIfAbsent(
                 ifaceClass,
-                t -> Stream.of(t.getInterfaces()).flatMap(i -> Stream.of(i.getMethods()))
-                        .map(Method::getName).collect(Collectors.toSet()));
-        factory.setFilter(m -> {
-            if (m.getName().equals("finalize")) {
-                return false;
-            }
-            return interfaceMethodNames.contains(m.getName());
-        });
-        MethodHandler handler = new MethodHandler() {
-
-            private Boolean success;
-
-            @Override
-            public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args)
-                    throws Throwable {
-                if (success != null) {
-                    throw new RuntimeException(
-                            "recall iface to get a new connection, you cannot reuse iface.");
-                }
-                success = false;
+                i -> Stream.of(i.getInterfaces()).flatMap(c -> Stream.of(c.getMethods()))
+                        .map(Method::getName).collect(Collectors.toSet())).contains(m.getName()));
+        try {
+            X x = (X) factory.create(new Class[] { org.apache.thrift.protocol.TProtocol.class },
+                    new Object[] { protocol });
+            ((Proxy) x).setHandler((self, thisMethod, proceed, args) -> {
+                boolean success = false;
                 try {
                     Object result = proceed.invoke(self, args);
                     success = true;
@@ -116,12 +117,7 @@ public class ThriftClient {
                         poolProvider.returnBrokenConnection(selected, transport);
                     }
                 }
-            }
-        };
-        try {
-            X x = (X) factory.create(new Class[] { org.apache.thrift.protocol.TProtocol.class },
-                    new Object[] { protocol });
-            ((Proxy) x).setHandler(handler);
+            });
             return x;
         } catch (NoSuchMethodException | IllegalArgumentException | InstantiationException
                 | IllegalAccessException | InvocationTargetException e) {

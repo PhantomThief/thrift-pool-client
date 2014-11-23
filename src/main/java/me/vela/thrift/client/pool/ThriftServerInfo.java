@@ -15,18 +15,24 @@ public final class ThriftServerInfo {
     private final int port;
 
     /**
-     * @param host
-     * @param port
+     * @param host host
+     * @param port port
      */
     public ThriftServerInfo(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
+    /**
+     * @return host
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     * @return port
+     */
     public int getPort() {
         return port;
     }
