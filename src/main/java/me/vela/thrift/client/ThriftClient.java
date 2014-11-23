@@ -27,9 +27,12 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
 /**
- * @author w.vela
+ * <p>
+ * ThriftClient class.
+ * </p>
  *
- * @date 2014年7月14日 下午5:01:17
+ * @author w.vela
+ * @version $Id: $Id
  */
 public class ThriftClient {
 
@@ -42,6 +45,10 @@ public class ThriftClient {
     private final Random random = new Random();
 
     /**
+     * <p>
+     * Constructor for ThriftClient.
+     * </p>
+     *
      * @param servicesInfoProvider provide service list
      */
     public ThriftClient(Supplier<List<ThriftServerInfo>> servicesInfoProvider) {
@@ -49,6 +56,10 @@ public class ThriftClient {
     }
 
     /**
+     * <p>
+     * Constructor for ThriftClient.
+     * </p>
+     *
      * @param servicesInfoProvider provide service list
      * @param poolProvider provide a pool
      */
@@ -59,27 +70,43 @@ public class ThriftClient {
     }
 
     /**
-     * @param ifaceClass
+     * <p>
+     * iface.
+     * </p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
      * @return proxied iface class
+     * @param <X> a X object.
      */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass) {
         return iface(ifaceClass, random.nextInt());
     }
 
     /**
-     * @param ifaceClass
-     * @param hash
+     * <p>
+     * iface.
+     * </p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @param hash a int.
      * @return proxied iface class
+     * @param <X> a X object.
      */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash) {
         return iface(ifaceClass, TCompactProtocol::new, hash);
     }
 
     /**
-     * @param ifaceClass
-     * @param protocolProvider
-     * @param hash
+     * <p>
+     * iface.
+     * </p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @param protocolProvider a {@link java.util.function.Function}
+     *        object.
+     * @param hash a int.
      * @return proxied iface class
+     * @param <X> a X object.
      */
     @SuppressWarnings("unchecked")
     public <X extends TServiceClient> X iface(Class<X> ifaceClass,

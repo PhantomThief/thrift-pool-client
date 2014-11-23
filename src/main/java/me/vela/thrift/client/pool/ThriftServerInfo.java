@@ -4,9 +4,12 @@
 package me.vela.thrift.client.pool;
 
 /**
- * @author w.vela
+ * <p>
+ * ThriftServerInfo class.
+ * </p>
  *
- * @date 2014年11月22日 下午8:53:33
+ * @author w.vela
+ * @version $Id: $Id
  */
 public final class ThriftServerInfo {
 
@@ -15,6 +18,10 @@ public final class ThriftServerInfo {
     private final int port;
 
     /**
+     * <p>
+     * Constructor for ThriftServerInfo.
+     * </p>
+     *
      * @param host host
      * @param port port
      */
@@ -24,6 +31,10 @@ public final class ThriftServerInfo {
     }
 
     /**
+     * <p>
+     * Getter for the field <code>host</code>.
+     * </p>
+     *
      * @return host
      */
     public String getHost() {
@@ -31,12 +42,17 @@ public final class ThriftServerInfo {
     }
 
     /**
+     * <p>
+     * Getter for the field <code>port</code>.
+     * </p>
+     *
      * @return port
      */
     public int getPort() {
         return port;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -46,6 +62,7 @@ public final class ThriftServerInfo {
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -71,6 +88,7 @@ public final class ThriftServerInfo {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "ThriftServerInfo [host=" + host + ", port=" + port + "]";

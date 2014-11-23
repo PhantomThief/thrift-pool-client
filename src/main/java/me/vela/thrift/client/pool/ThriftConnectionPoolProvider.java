@@ -6,27 +6,47 @@ package me.vela.thrift.client.pool;
 import org.apache.thrift.transport.TTransport;
 
 /**
- * @author w.vela
+ * <p>
+ * ThriftConnectionPoolProvider interface.
+ * </p>
  *
- * @date 2014年11月22日 下午8:57:12
+ * @author w.vela
+ * @version $Id: $Id
  */
 public interface ThriftConnectionPoolProvider {
 
     /**
-     * @param thriftServerInfo
-     * @return
+     * <p>
+     * getConnection.
+     * </p>
+     *
+     * @param thriftServerInfo a
+     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     * @return a {@link org.apache.thrift.transport.TTransport} object.
      */
     public TTransport getConnection(ThriftServerInfo thriftServerInfo);
 
     /**
-     * @param thriftServerInfo
-     * @param transport
+     * <p>
+     * returnConnection.
+     * </p>
+     *
+     * @param thriftServerInfo a
+     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     * @param transport a {@link org.apache.thrift.transport.TTransport}
+     *        object.
      */
     public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
 
     /**
-     * @param thriftServerInfo
-     * @param transport
+     * <p>
+     * returnBrokenConnection.
+     * </p>
+     *
+     * @param thriftServerInfo a
+     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     * @param transport a {@link org.apache.thrift.transport.TTransport}
+     *        object.
      */
     public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
 

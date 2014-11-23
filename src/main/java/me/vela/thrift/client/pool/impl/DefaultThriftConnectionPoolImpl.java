@@ -19,9 +19,12 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
 /**
- * @author w.vela
+ * <p>
+ * DefaultThriftConnectionPoolImpl class.
+ * </p>
  *
- * @date 2014年9月9日 下午4:53:11
+ * @author w.vela
+ * @version $Id: $Id
  */
 public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPoolProvider {
 
@@ -36,12 +39,32 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
 
     private final GenericKeyedObjectPool<ThriftServerInfo, TTransport> connections;
 
+    /**
+     * <p>
+     * Constructor for DefaultThriftConnectionPoolImpl.
+     * </p>
+     *
+     * @param config a
+     *        {@link org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig}
+     *        object.
+     * @param transportProvider a {@link java.util.function.Function}
+     *        object.
+     */
     public DefaultThriftConnectionPoolImpl(GenericKeyedObjectPoolConfig config,
             Function<ThriftServerInfo, TTransport> transportProvider) {
         connections = new GenericKeyedObjectPool<>(new ThriftConnectionFactory(transportProvider),
                 config);
     }
 
+    /**
+     * <p>
+     * Constructor for DefaultThriftConnectionPoolImpl.
+     * </p>
+     *
+     * @param config a
+     *        {@link org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig}
+     *        object.
+     */
     public DefaultThriftConnectionPoolImpl(GenericKeyedObjectPoolConfig config) {
         this(config, info -> {
             TSocket tsocket = new TSocket(info.getHost(), info.getPort());
@@ -53,6 +76,15 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
 
     private static volatile DefaultThriftConnectionPoolImpl defaultInstance;
 
+    /**
+     * <p>
+     * getInstance.
+     * </p>
+     *
+     * @return a
+     *         {@link me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl}
+     *         object.
+     */
     public static final DefaultThriftConnectionPoolImpl getInstance() {
         if (defaultInstance == null) {
             synchronized (DefaultThriftConnectionPoolImpl.class) {
@@ -143,6 +175,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public TTransport getConnection(ThriftServerInfo thriftServerInfo) {
         try {
@@ -153,11 +186,13 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
         connections.returnObject(thriftServerInfo, transport);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
         try {
