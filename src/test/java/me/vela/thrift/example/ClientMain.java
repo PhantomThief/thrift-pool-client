@@ -34,8 +34,8 @@ public class ClientMain {
     public static void main(String[] args) throws TException {
         // init a thrift client
         ThriftClient thriftClient = new ThriftClientImpl(() -> Arrays.asList(//
-                new ThriftServerInfo("127.0.0.1", 9090), //
-                new ThriftServerInfo("127.0.0.1", 9091) //
+                ThriftServerInfo.of("127.0.0.1", 9090), //
+                ThriftServerInfo.of("127.0.0.1", 9091) //
                 // or you can return a dynamic result.
                 ));
         // get iface and call
@@ -59,15 +59,15 @@ public class ClientMain {
             return transport;
         };
         ThriftClient customizeThriftClient = new ThriftClientImpl(() -> Arrays.asList(//
-                new ThriftServerInfo("127.0.0.1", 9090), //
-                new ThriftServerInfo("127.0.0.1", 9091) //
+                ThriftServerInfo.of("127.0.0.1", 9090), //
+                ThriftServerInfo.of("127.0.0.1", 9091) //
                 ), new DefaultThriftConnectionPoolImpl(poolConfig, transportProvider));
         customizeThriftClient.iface(Client.class).echo("hello world.");
 
         // init a failover thrift client
         ThriftClient failoverThriftClient = new FailoverThriftClientImpl(() -> Arrays.asList(//
-                new ThriftServerInfo("127.0.0.1", 9090), //
-                new ThriftServerInfo("127.0.0.1", 9091) //
+                ThriftServerInfo.of("127.0.0.1", 9090), //
+                ThriftServerInfo.of("127.0.0.1", 9091) //
                 ));
         failoverThriftClient.iface(Client.class).echo("hello world.");
 
@@ -76,8 +76,8 @@ public class ClientMain {
                 10, TimeUnit.SECONDS.toMillis(30), TimeUnit.MINUTES.toMillis(1));
         ThriftClient customizedFailoverThriftClient = new FailoverThriftClientImpl(
                 failoverCheckingStrategy, () -> Arrays.asList(//
-                        new ThriftServerInfo("127.0.0.1", 9090), //
-                        new ThriftServerInfo("127.0.0.1", 9091) //
+                        ThriftServerInfo.of("127.0.0.1", 9090), //
+                        ThriftServerInfo.of("127.0.0.1", 9091) //
                         ), DefaultThriftConnectionPoolImpl.getInstance());
         customizedFailoverThriftClient.iface(Client.class).echo("hello world.");
     }

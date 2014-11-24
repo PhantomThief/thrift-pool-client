@@ -58,7 +58,7 @@ public class FailoverCheckingStrategy<T> {
         this.failDuration = failDuration;
         this.failedList = CacheBuilder.newBuilder().weakKeys()
                 .expireAfterWrite(recoveryDuration, TimeUnit.MILLISECONDS).build();
-        this.failCountMap = CacheBuilder.newBuilder().weakKeys().weakValues()
+        this.failCountMap = CacheBuilder.newBuilder().weakKeys()
                 .build(new CacheLoader<T, EvictingQueue<Long>>() {
 
                     @Override

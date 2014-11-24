@@ -28,9 +28,9 @@ public class TestThriftPoolClient {
 
         // define serverList provider, you can use dynamic provider here to impl on the fly changing...
         Supplier<List<ThriftServerInfo>> serverListProvider = () -> Arrays.asList( //
-                new ThriftServerInfo("127.0.0.1", 9092), //
-                new ThriftServerInfo("127.0.0.1", 9091), //
-                new ThriftServerInfo("127.0.0.1", 9090));
+                ThriftServerInfo.of("127.0.0.1", 9092), //
+                ThriftServerInfo.of("127.0.0.1", 9091), //
+                ThriftServerInfo.of("127.0.0.1", 9090));
 
         // init pool client
         ThriftClientImpl client = new ThriftClientImpl(serverListProvider);

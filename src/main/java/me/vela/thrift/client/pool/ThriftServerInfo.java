@@ -3,6 +3,12 @@
  */
 package me.vela.thrift.client.pool;
 
+import java.util.List;
+import java.util.concurrent.ConcurrentMap;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.MapMaker;
+
 /**
  * <p>
  * ThriftServerInfo class.
@@ -13,6 +19,11 @@ package me.vela.thrift.client.pool;
  */
 public final class ThriftServerInfo {
 
+    private static ConcurrentMap<String, ThriftServerInfo> allInfos = new MapMaker().weakValues()
+            .makeMap();
+
+    private static Splitter splitter = Splitter.on(':');
+
     private final String host;
 
     private final int port;
@@ -22,12 +33,21 @@ public final class ThriftServerInfo {
      * Constructor for ThriftServerInfo.
      * </p>
      *
-     * @param host host
-     * @param port port
+     * @param hostAndPort
      */
-    public ThriftServerInfo(String host, int port) {
-        this.host = host;
-        this.port = port;
+    private ThriftServerInfo(String hostAndPort) {
+        List<String> split = splitter.splitToList(hostAndPort);
+        assert split.size() == 2;
+        this.host = split.get(0);
+        this.port = Integer.parseInt(split.get(1));
+    }
+
+    public static final ThriftServerInfo of(String host, int port) {
+        return allInfos.computeIfAbsent(host + ":" + port, ThriftServerInfo::new);
+    }
+
+    public static final ThriftServerInfo of(String hostAndPort) {
+        return allInfos.computeIfAbsent(hostAndPort, ThriftServerInfo::new);
     }
 
     /**
@@ -93,4 +113,5 @@ public final class ThriftServerInfo {
     public String toString() {
         return "ThriftServerInfo [host=" + host + ", port=" + port + "]";
     }
+
 }
