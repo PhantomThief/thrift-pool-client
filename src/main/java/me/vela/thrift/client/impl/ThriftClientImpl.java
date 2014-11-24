@@ -118,7 +118,7 @@ public class ThriftClientImpl implements ThriftClient {
         hash = Math.abs(hash);
         hash = hash < 0 ? 0 : hash;
         ThriftServerInfo selected = servers.get(hash % servers.size());
-        logger.trace("get connection for [{}]->{} with hash:{}", ifaceClass, protocolProvider, hash);
+        logger.trace("get connection for [{}]->{} with hash:{}", ifaceClass, selected, hash);
 
         TTransport transport = poolProvider.getConnection(selected);
         TProtocol protocol = protocolProvider.apply(transport);

@@ -1,19 +1,37 @@
-thrift-pool-client
-=======================
+/**
+ * 
+ */
+package me.vela.thrift.example;
 
-A Thrift Client pool for Java
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
-* raw and TypeSafe TServiceClient pool
-* Multi Backend Servers support
-* Backend Servers replace on the fly
-* Backend route by hash or random
-* Failover and failback support
-* jdk 1.8 only
+import me.vela.thrift.client.ThriftClient;
+import me.vela.thrift.client.impl.FailoverThriftClientImpl;
+import me.vela.thrift.client.impl.ThriftClientImpl;
+import me.vela.thrift.client.pool.ThriftServerInfo;
+import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
+import me.vela.thrift.client.utils.FailoverCheckingStrategy;
+import me.vela.thrift.test.service.TestThriftService.Client;
 
-## Usage
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 
-```Java
+/**
+ * @author w.vela <vela@longbeach-inc.com>
+ */
+public class ClientMain {
 
+    /**
+     * @param args
+     * @throws TException
+     */
+    public static void main(String[] args) throws TException {
         // init a thrift client
         ThriftClient thriftClient = new ThriftClientImpl(() -> Arrays.asList(//
                 new ThriftServerInfo("127.0.0.1", 9090), //
@@ -62,14 +80,5 @@ A Thrift Client pool for Java
                         new ThriftServerInfo("127.0.0.1", 9091) //
                         ), DefaultThriftConnectionPoolImpl.getInstance());
         customizedFailoverThriftClient.iface(Client.class).echo("hello world.");
-    
-```
-
-## Know issues
-
-You shouldn't reuse iface return by client.
-
-## Special Thanks
-
-perlmonk with his great team gives me a huge help.
-(https://github.com/aloha-app/thrift-client-pool-java)
+    }
+}
