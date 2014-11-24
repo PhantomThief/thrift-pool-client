@@ -6,7 +6,8 @@ A Thrift Client pool for Java
 * raw and TypeSafe TServiceClient pool
 * Multi Backend Servers support
 * Backend Servers replace on the fly
-* Backend route by hash or any other algorithm
+* Backend route by hash or random
+* Failover and failback support
 * Ease of use
 * jdk 1.8 only
 

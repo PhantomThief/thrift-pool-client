@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import me.vela.thrift.client.ThriftClient;
+import me.vela.thrift.client.impl.ThriftClientImpl;
 import me.vela.thrift.client.pool.ThriftServerInfo;
 import me.vela.thrift.test.service.TestThriftService.Client;
 
@@ -35,7 +35,7 @@ public class TestThriftPoolClient {
                 new ThriftServerInfo("127.0.0.1", 9090));
 
         // init pool client
-        ThriftClient client = new ThriftClient(serverListProvider);
+        ThriftClientImpl client = new ThriftClientImpl(serverListProvider);
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
