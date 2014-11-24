@@ -33,6 +33,8 @@ import org.apache.thrift.transport.TTransport;
  */
 public class ThriftClientImpl implements ThriftClient {
 
+    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+
     private final ThriftConnectionPoolProvider poolProvider;
 
     private final Supplier<List<ThriftServerInfo>> serverInfoProvider;
@@ -116,6 +118,7 @@ public class ThriftClientImpl implements ThriftClient {
         hash = Math.abs(hash);
         hash = hash < 0 ? 0 : hash;
         ThriftServerInfo selected = servers.get(hash % servers.size());
+        logger.trace("get connection for [{}]->{} with hash:{}", ifaceClass, protocolProvider, hash);
 
         TTransport transport = poolProvider.getConnection(selected);
         TProtocol protocol = protocolProvider.apply(transport);

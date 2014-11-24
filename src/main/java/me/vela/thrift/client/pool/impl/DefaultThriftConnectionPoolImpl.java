@@ -125,7 +125,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
             TTransport transport = transportProvider.apply(info);
             transport.open();
             DefaultPooledObject<TTransport> result = new DefaultPooledObject<>(transport);
-            logger.info("make new thrift connection:{}", info);
+            logger.trace("make new thrift connection:{}", info);
             return result;
         }
 
@@ -138,7 +138,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
             TTransport transport = p.getObject();
             if (transport != null && transport.isOpen()) {
                 transport.close();
-                logger.info("close thrift connection:{}", info);
+                logger.trace("close thrift connection:{}", info);
             }
         }
 
@@ -150,7 +150,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
             try {
                 return p.getObject().isOpen();
             } catch (Throwable e) {
-                logger.info("fail to validate tsocket:{}", info, e);
+                logger.error("fail to validate tsocket:{}", info, e);
                 return false;
             }
         }

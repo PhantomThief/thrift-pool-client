@@ -17,6 +17,8 @@ import com.google.common.collect.EvictingQueue;
  */
 public class FailoverCheckingStrategy<T> {
 
+    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+
     private static final int DEFAULT_FAIL_COUNT = 10;
 
     private static final long DEFAULT_FAIL_DURATION = TimeUnit.MINUTES.toMillis(1);
@@ -52,6 +54,7 @@ public class FailoverCheckingStrategy<T> {
     }
 
     public void fail(T object) {
+        logger.trace("server {} failed.", object);
         EvictingQueue<Long> evictingQueue = failCountMap.computeIfAbsent(object,
                 o -> EvictingQueue.create(failCount));
         boolean addToFail = false;
@@ -64,6 +67,7 @@ public class FailoverCheckingStrategy<T> {
         }
         if (addToFail) {
             failedList.put(object, Boolean.TRUE);
+            logger.trace("server {} failed. add to fail list.", object);
         }
     }
 }
