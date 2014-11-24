@@ -4,6 +4,7 @@
 package me.vela.thrift.client.utils;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -11,18 +12,47 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author w.vela
+ * <p>
+ * ThriftClientUtils class.
+ * </p>
  *
- * @date 2014年11月24日 上午10:18:11
+ * @author w.vela
+ * @version $Id: $Id
  */
 public final class ThriftClientUtils {
 
     private static ConcurrentMap<Class<?>, Set<String>> interfaceMethodCache = new ConcurrentHashMap<>();
 
+    private static volatile Random random;
+
     private ThriftClientUtils() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * <p>randomNextInt.</p>
+     *
+     * @return a int.
+     */
+    public static final int randomNextInt() {
+        if (random == null) {
+            synchronized (ThriftClientUtils.class) {
+                if (random == null) {
+                    random = new Random();
+                }
+            }
+        }
+        return random.nextInt();
+    }
+
+    /**
+     * <p>
+     * getInterfaceMethodNames.
+     * </p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @return a {@link java.util.Set} object.
+     */
     public static final Set<String> getInterfaceMethodNames(Class<?> ifaceClass) {
         return interfaceMethodCache.computeIfAbsent(
                 ifaceClass,

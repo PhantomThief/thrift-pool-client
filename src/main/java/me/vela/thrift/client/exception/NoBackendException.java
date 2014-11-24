@@ -4,9 +4,12 @@
 package me.vela.thrift.client.exception;
 
 /**
- * @author w.vela
+ * <p>
+ * NoBackendException class.
+ * </p>
  *
- * @date 2014年11月24日 上午10:13:28
+ * @author w.vela
+ * @version $Id: $Id
  */
 public class NoBackendException extends RuntimeException {
 

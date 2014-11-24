@@ -4,6 +4,7 @@
 package me.vela.thrift.client.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -19,7 +20,12 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
 /**
+ * <p>
+ * FailoverThriftClientImpl class.
+ * </p>
+ *
  * @author w.vela
+ * @version $Id: $Id
  */
 public class FailoverThriftClientImpl implements ThriftClient {
 
@@ -47,10 +53,9 @@ public class FailoverThriftClientImpl implements ThriftClient {
          */
         @Override
         public List<ThriftServerInfo> get() {
-            List<ThriftServerInfo> thisServerList = originalServerInfoProvider.get();
-            return thisServerList.stream()
-                    .filter(i -> !failoverCheckingStrategy.getFailed().contains(i))
-                    .collect(Collectors.toList());
+            Set<ThriftServerInfo> failedServers = failoverCheckingStrategy.getFailed();
+            return originalServerInfoProvider.get().stream()
+                    .filter(i -> !failedServers.contains(i)).collect(Collectors.toList());
         }
 
         /* (non-Javadoc)
@@ -79,11 +84,33 @@ public class FailoverThriftClientImpl implements ThriftClient {
         }
     }
 
+    /**
+     * <p>
+     * Constructor for FailoverThriftClientImpl.
+     * </p>
+     *
+     * @param serverInfoProvider a {@link java.util.function.Supplier}
+     *        object.
+     */
     public FailoverThriftClientImpl(Supplier<List<ThriftServerInfo>> serverInfoProvider) {
         this(new FailoverCheckingStrategy<>(), serverInfoProvider, DefaultThriftConnectionPoolImpl
                 .getInstance());
     }
 
+    /**
+     * <p>
+     * Constructor for FailoverThriftClientImpl.
+     * </p>
+     *
+     * @param failoverCheckingStrategy a
+     *        {@link me.vela.thrift.client.utils.FailoverCheckingStrategy}
+     *        object.
+     * @param serverInfoProvider a {@link java.util.function.Supplier}
+     *        object.
+     * @param poolProvider a
+     *        {@link me.vela.thrift.client.pool.ThriftConnectionPoolProvider}
+     *        object.
+     */
     public FailoverThriftClientImpl(
             FailoverCheckingStrategy<ThriftServerInfo> failoverCheckingStrategy,
             Supplier<List<ThriftServerInfo>> serverInfoProvider,
@@ -96,6 +123,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     /* (non-Javadoc)
      * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class)
      */
+    /** {@inheritDoc} */
     @Override
     public <X extends TServiceClient> X iface(Class<X> ifaceClass) {
         return thriftClient.iface(ifaceClass);
@@ -104,6 +132,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     /* (non-Javadoc)
      * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class, int)
      */
+    /** {@inheritDoc} */
     @Override
     public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash) {
         return thriftClient.iface(ifaceClass, hash);
@@ -112,6 +141,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     /* (non-Javadoc)
      * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class, java.util.function.Function, int)
      */
+    /** {@inheritDoc} */
     @Override
     public <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash) {

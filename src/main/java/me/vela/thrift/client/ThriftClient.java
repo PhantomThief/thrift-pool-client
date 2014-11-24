@@ -10,28 +10,37 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
 /**
+ * <p>ThriftClient interface.</p>
+ *
  * @author w.vela
+ * @version $Id: $Id
  */
 public interface ThriftClient {
 
     /**
-     * @param ifaceClass
-     * @return
+     * <p>iface.</p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @return a X object.
      */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass);
 
     /**
-     * @param ifaceClass
-     * @param hash
-     * @return
+     * <p>iface.</p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @param hash a int.
+     * @return a X object.
      */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash);
 
     /**
-     * @param ifaceClass
-     * @param protocolProvider
-     * @param hash
-     * @return
+     * <p>iface.</p>
+     *
+     * @param ifaceClass a {@link java.lang.Class} object.
+     * @param protocolProvider a {@link java.util.function.Function} object.
+     * @param hash a int.
+     * @return a X object.
      */
     public <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash);

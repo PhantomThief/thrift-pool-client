@@ -23,7 +23,7 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
 /**
- * @author w.vela <vela@longbeach-inc.com>
+ * @author w.vela
  */
 public class ClientMain {
 
@@ -51,7 +51,7 @@ public class ClientMain {
 
         // customize pool config
         GenericKeyedObjectPoolConfig poolConfig = new GenericKeyedObjectPoolConfig();
-        // ... customize pool config there
+        // ... customize pool config here
         // customize transport, while if you expect pooling the connection, you should use TFrameTransport.
         Function<ThriftServerInfo, TTransport> transportProvider = info -> {
             TSocket socket = new TSocket(info.getHost(), info.getPort());

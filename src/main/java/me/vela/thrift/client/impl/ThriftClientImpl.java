@@ -5,7 +5,6 @@ package me.vela.thrift.client.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -39,8 +38,6 @@ public class ThriftClientImpl implements ThriftClient {
 
     private final Supplier<List<ThriftServerInfo>> serverInfoProvider;
 
-    private final Random random = new Random();
-
     /**
      * <p>
      * Constructor for ThriftClientImpl.
@@ -67,28 +64,23 @@ public class ThriftClientImpl implements ThriftClient {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * iface.
      * </p>
-     *
-     * @param ifaceClass a {@link java.lang.Class} object.
-     * @return proxied iface class
-     * @param <X> a X object.
      */
     @Override
     public <X extends TServiceClient> X iface(Class<X> ifaceClass) {
-        return iface(ifaceClass, random.nextInt());
+        return iface(ifaceClass, ThriftClientUtils.randomNextInt());
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * iface.
      * </p>
-     *
-     * @param ifaceClass a {@link java.lang.Class} object.
-     * @param hash a int.
-     * @return proxied iface class
-     * @param <X> a X object.
      */
     @Override
     public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash) {
@@ -96,16 +88,11 @@ public class ThriftClientImpl implements ThriftClient {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * <p>
      * iface.
      * </p>
-     *
-     * @param ifaceClass a {@link java.lang.Class} object.
-     * @param protocolProvider a {@link java.util.function.Function}
-     *        object.
-     * @param hash a int.
-     * @return proxied iface class
-     * @param <X> a X object.
      */
     @SuppressWarnings("unchecked")
     @Override
