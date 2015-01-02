@@ -67,7 +67,7 @@ customizedFailoverThriftClient.iface(Client.class).echo("hello world.");
 
 ## Know issues
 
-You shouldn't reuse iface return by client.
+You shouldn't reuse iface returned by client.
 
 ## Special Thanks
 
