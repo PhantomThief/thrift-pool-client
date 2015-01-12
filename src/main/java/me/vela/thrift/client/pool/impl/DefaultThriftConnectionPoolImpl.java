@@ -74,7 +74,22 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
         });
     }
 
-    private static volatile DefaultThriftConnectionPoolImpl defaultInstance;
+    private static class LazyHolder {
+
+        private static final DefaultThriftConnectionPoolImpl INSTANCE;
+        static {
+            GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
+            config.setMaxTotal(MAX_CONN);
+            config.setMaxTotalPerKey(MAX_CONN);
+            config.setMaxIdlePerKey(MAX_CONN);
+            config.setMinIdlePerKey(MIN_CONN);
+            config.setTestOnBorrow(true);
+            config.setMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
+            config.setSoftMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
+            config.setJmxEnabled(false);
+            INSTANCE = new DefaultThriftConnectionPoolImpl(config);
+        }
+    }
 
     /**
      * <p>
@@ -86,23 +101,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
      *         object.
      */
     public static final DefaultThriftConnectionPoolImpl getInstance() {
-        if (defaultInstance == null) {
-            synchronized (DefaultThriftConnectionPoolImpl.class) {
-                if (defaultInstance == null) {
-                    GenericKeyedObjectPoolConfig config = new GenericKeyedObjectPoolConfig();
-                    config.setMaxTotal(MAX_CONN);
-                    config.setMaxTotalPerKey(MAX_CONN);
-                    config.setMaxIdlePerKey(MAX_CONN);
-                    config.setMinIdlePerKey(MIN_CONN);
-                    config.setTestOnBorrow(true);
-                    config.setMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
-                    config.setSoftMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
-                    config.setJmxEnabled(false);
-                    defaultInstance = new DefaultThriftConnectionPoolImpl(config);
-                }
-            }
-        }
-        return defaultInstance;
+        return LazyHolder.INSTANCE;
     }
 
     public static final class ThriftConnectionFactory implements

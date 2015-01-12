@@ -23,26 +23,21 @@ public final class ThriftClientUtils {
 
     private static ConcurrentMap<Class<?>, Set<String>> interfaceMethodCache = new ConcurrentHashMap<>();
 
-    private static volatile Random random;
+    private static final Random RANDOM = new Random();
 
     private ThriftClientUtils() {
         throw new UnsupportedOperationException();
     }
 
     /**
-     * <p>randomNextInt.</p>
+     * <p>
+     * randomNextInt.
+     * </p>
      *
      * @return a int.
      */
     public static final int randomNextInt() {
-        if (random == null) {
-            synchronized (ThriftClientUtils.class) {
-                if (random == null) {
-                    random = new Random();
-                }
-            }
-        }
-        return random.nextInt();
+        return RANDOM.nextInt();
     }
 
     /**
