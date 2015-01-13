@@ -1,13 +1,10 @@
 /**
  * 
  */
-package me.vela.thrift.client.pool.impl;
+package com.github.phantomthief.thrift.client.pool.impl;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
-import me.vela.thrift.client.pool.ThriftServerInfo;
 
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -17,6 +14,9 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+
+import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
+import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
 
 /**
  * <p>
@@ -97,7 +97,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
      * </p>
      *
      * @return a
-     *         {@link me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl}
+     *         {@link com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl}
      *         object.
      */
     public static final DefaultThriftConnectionPoolImpl getInstance() {

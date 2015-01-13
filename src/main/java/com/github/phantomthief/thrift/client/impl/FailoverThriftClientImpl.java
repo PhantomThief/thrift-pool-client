@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.impl;
+package com.github.phantomthief.thrift.client.impl;
 
 import java.util.List;
 import java.util.Set;
@@ -9,15 +9,15 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import me.vela.thrift.client.ThriftClient;
-import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
-import me.vela.thrift.client.pool.ThriftServerInfo;
-import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
-import me.vela.thrift.client.utils.FailoverCheckingStrategy;
-
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
+
+import com.github.phantomthief.thrift.client.ThriftClient;
+import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
+import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
+import com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
+import com.github.phantomthief.thrift.client.utils.FailoverCheckingStrategy;
 
 /**
  * <p>
@@ -59,7 +59,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
         }
 
         /* (non-Javadoc)
-         * @see me.vela.thrift.client.pool.ThriftConnectionPoolProvider#getConnection(me.vela.thrift.client.pool.ThriftServerInfo)
+         * @see com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider#getConnection(com.github.phantomthief.thrift.client.pool.ThriftServerInfo)
          */
         @Override
         public TTransport getConnection(ThriftServerInfo thriftServerInfo) {
@@ -67,7 +67,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
         }
 
         /* (non-Javadoc)
-         * @see me.vela.thrift.client.pool.ThriftConnectionPoolProvider#returnConnection(me.vela.thrift.client.pool.ThriftServerInfo, org.apache.thrift.transport.TTransport)
+         * @see com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider#returnConnection(com.github.phantomthief.thrift.client.pool.ThriftServerInfo, org.apache.thrift.transport.TTransport)
          */
         @Override
         public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
@@ -75,7 +75,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
         }
 
         /* (non-Javadoc)
-         * @see me.vela.thrift.client.pool.ThriftConnectionPoolProvider#returnBrokenConnection(me.vela.thrift.client.pool.ThriftServerInfo, org.apache.thrift.transport.TTransport)
+         * @see com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider#returnBrokenConnection(com.github.phantomthief.thrift.client.pool.ThriftServerInfo, org.apache.thrift.transport.TTransport)
          */
         @Override
         public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
@@ -103,12 +103,12 @@ public class FailoverThriftClientImpl implements ThriftClient {
      * </p>
      *
      * @param failoverCheckingStrategy a
-     *        {@link me.vela.thrift.client.utils.FailoverCheckingStrategy}
+     *        {@link com.github.phantomthief.thrift.client.utils.FailoverCheckingStrategy}
      *        object.
      * @param serverInfoProvider a {@link java.util.function.Supplier}
      *        object.
      * @param poolProvider a
-     *        {@link me.vela.thrift.client.pool.ThriftConnectionPoolProvider}
+     *        {@link com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider}
      *        object.
      */
     public FailoverThriftClientImpl(
@@ -121,7 +121,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     }
 
     /* (non-Javadoc)
-     * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class)
+     * @see com.github.phantomthief.thrift.client.ThriftClient#iface(java.lang.Class)
      */
     /** {@inheritDoc} */
     @Override
@@ -130,7 +130,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     }
 
     /* (non-Javadoc)
-     * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class, int)
+     * @see com.github.phantomthief.thrift.client.ThriftClient#iface(java.lang.Class, int)
      */
     /** {@inheritDoc} */
     @Override
@@ -139,7 +139,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
     }
 
     /* (non-Javadoc)
-     * @see me.vela.thrift.client.ThriftClient#iface(java.lang.Class, java.util.function.Function, int)
+     * @see com.github.phantomthief.thrift.client.ThriftClient#iface(java.lang.Class, java.util.function.Function, int)
      */
     /** {@inheritDoc} */
     @Override

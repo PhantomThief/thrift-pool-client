@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.impl;
+package com.github.phantomthief.thrift.client.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,17 +10,18 @@ import java.util.function.Supplier;
 
 import javassist.util.proxy.Proxy;
 import javassist.util.proxy.ProxyFactory;
-import me.vela.thrift.client.ThriftClient;
-import me.vela.thrift.client.exception.NoBackendException;
-import me.vela.thrift.client.pool.ThriftConnectionPoolProvider;
-import me.vela.thrift.client.pool.ThriftServerInfo;
-import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
-import me.vela.thrift.client.utils.ThriftClientUtils;
 
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
+
+import com.github.phantomthief.thrift.client.ThriftClient;
+import com.github.phantomthief.thrift.client.exception.NoBackendException;
+import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
+import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
+import com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
+import com.github.phantomthief.thrift.client.utils.ThriftClientUtils;
 
 /**
  * <p>

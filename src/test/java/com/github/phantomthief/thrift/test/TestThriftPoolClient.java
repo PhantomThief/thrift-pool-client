@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.test;
+package com.github.phantomthief.thrift.test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
-import me.vela.thrift.client.impl.ThriftClientImpl;
-import me.vela.thrift.client.pool.ThriftServerInfo;
-import me.vela.thrift.test.service.TestThriftService.Client;
-
 import org.junit.Test;
+
+import com.github.phantomthief.thrift.client.impl.ThriftClientImpl;
+import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
+import com.github.phantomthief.thrift.test.service.TestThriftService.Client;
 
 /**
  * @author w.vela

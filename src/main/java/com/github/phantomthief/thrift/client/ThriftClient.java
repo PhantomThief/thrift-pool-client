@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client;
+package com.github.phantomthief.thrift.client;
 
 import java.util.function.Function;
 

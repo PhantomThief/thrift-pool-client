@@ -1,4 +1,4 @@
-namespace java me.vela.thrift.test.service
+namespace java com.github.phantomthief.thrift.test.service
 
 service TestThriftService {
     string echo(1:string message);

@@ -3,14 +3,22 @@ thrift-pool-client
 
 A Thrift Client pool for Java
 
-* raw and TypeSafe TServiceClient pool
-* Multi Backend Servers support
-* Backend Servers replace on the fly
+* raw and type safe TServiceClient pool
+* Multi backend servers support
+* Backend servers replace on the fly
 * Backend route by hash or random
 * Failover and failback support
 * jdk 1.8 only
 
-## Usage
+## Get Started
+
+```xml
+<dependency>
+    <groupId>com.github.phantomthief</groupId>
+    <artifactId>thrift-pool-client</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
 
 ```Java
 

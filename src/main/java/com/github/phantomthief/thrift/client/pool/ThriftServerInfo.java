@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.pool;
+package com.github.phantomthief.thrift.client.pool;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.utils;
+package com.github.phantomthief.thrift.client.utils;
 
 import java.lang.reflect.Method;
 import java.util.Random;

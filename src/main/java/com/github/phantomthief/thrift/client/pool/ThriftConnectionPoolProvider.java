@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.pool;
+package com.github.phantomthief.thrift.client.pool;
 
 import org.apache.thrift.transport.TTransport;
 
@@ -21,7 +21,7 @@ public interface ThriftConnectionPoolProvider {
      * </p>
      *
      * @param thriftServerInfo a
-     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     *        {@link com.github.phantomthief.thrift.client.pool.ThriftServerInfo} object.
      * @return a {@link org.apache.thrift.transport.TTransport} object.
      */
     public TTransport getConnection(ThriftServerInfo thriftServerInfo);
@@ -32,7 +32,7 @@ public interface ThriftConnectionPoolProvider {
      * </p>
      *
      * @param thriftServerInfo a
-     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     *        {@link com.github.phantomthief.thrift.client.pool.ThriftServerInfo} object.
      * @param transport a {@link org.apache.thrift.transport.TTransport}
      *        object.
      */
@@ -44,7 +44,7 @@ public interface ThriftConnectionPoolProvider {
      * </p>
      *
      * @param thriftServerInfo a
-     *        {@link me.vela.thrift.client.pool.ThriftServerInfo} object.
+     *        {@link com.github.phantomthief.thrift.client.pool.ThriftServerInfo} object.
      * @param transport a {@link org.apache.thrift.transport.TTransport}
      *        object.
      */

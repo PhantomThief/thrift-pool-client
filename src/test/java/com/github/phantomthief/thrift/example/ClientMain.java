@@ -1,19 +1,11 @@
 /**
  * 
  */
-package me.vela.thrift.example;
+package com.github.phantomthief.thrift.example;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import me.vela.thrift.client.ThriftClient;
-import me.vela.thrift.client.impl.FailoverThriftClientImpl;
-import me.vela.thrift.client.impl.ThriftClientImpl;
-import me.vela.thrift.client.pool.ThriftServerInfo;
-import me.vela.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
-import me.vela.thrift.client.utils.FailoverCheckingStrategy;
-import me.vela.thrift.test.service.TestThriftService.Client;
 
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.thrift.TException;
@@ -21,6 +13,14 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+
+import com.github.phantomthief.thrift.client.ThriftClient;
+import com.github.phantomthief.thrift.client.impl.FailoverThriftClientImpl;
+import com.github.phantomthief.thrift.client.impl.ThriftClientImpl;
+import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
+import com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
+import com.github.phantomthief.thrift.client.utils.FailoverCheckingStrategy;
+import com.github.phantomthief.thrift.test.service.TestThriftService.Client;
 
 /**
  * @author w.vela

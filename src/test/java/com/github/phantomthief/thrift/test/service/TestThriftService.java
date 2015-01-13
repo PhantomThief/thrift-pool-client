@@ -4,7 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package me.vela.thrift.test.service;
+package com.github.phantomthief.thrift.test.service;
 
 import java.util.ArrayList;
 import java.util.BitSet;

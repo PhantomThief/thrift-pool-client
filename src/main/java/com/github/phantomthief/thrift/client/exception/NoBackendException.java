@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.vela.thrift.client.exception;
+package com.github.phantomthief.thrift.client.exception;
 
 /**
  * <p>
