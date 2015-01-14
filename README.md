@@ -16,7 +16,7 @@ A Thrift Client pool for Java
 <dependency>
     <groupId>com.github.phantomthief</groupId>
     <artifactId>thrift-pool-client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
