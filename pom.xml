@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.phantomthief</groupId>
 	<artifactId>thrift-pool-client</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -30,7 +30,9 @@
 	</licenses>
 
 	<scm>
+		<connection>scm:git:https://github.com/PhantomThief/thrift-pool-client.git</connection>
 		<url>https://github.com/PhantomThief/thrift-pool-client.git</url>
+		<developerConnection>scm:git:https://github.com/PhantomThief/thrift-pool-client.git</developerConnection>
 	</scm>
 
 	<dependencies>
