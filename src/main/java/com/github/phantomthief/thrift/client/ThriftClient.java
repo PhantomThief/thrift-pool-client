@@ -23,7 +23,7 @@ public interface ThriftClient {
      * @param ifaceClass a {@link java.lang.Class} object.
      * @return a X object.
      */
-    public <X extends TServiceClient> X iface(Class<X> ifaceClass);
+    <X extends TServiceClient> X iface(Class<X> ifaceClass);
 
     /**
      * <p>iface.</p>
@@ -32,7 +32,7 @@ public interface ThriftClient {
      * @param hash a int.
      * @return a X object.
      */
-    public <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash);
+    <X extends TServiceClient> X iface(Class<X> ifaceClass, int hash);
 
     /**
      * <p>iface.</p>
@@ -42,7 +42,7 @@ public interface ThriftClient {
      * @param hash a int.
      * @return a X object.
      */
-    public <X extends TServiceClient> X iface(Class<X> ifaceClass,
+    <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash);
 
 }

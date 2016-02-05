@@ -28,7 +28,6 @@ import com.github.phantomthief.thrift.test.service.TestThriftService.Client;
 public class ClientMain {
 
     /**
-     * @param args
      * @throws TException
      */
     public static void main(String[] args) throws TException {

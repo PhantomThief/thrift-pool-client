@@ -24,7 +24,7 @@ public interface ThriftConnectionPoolProvider {
      *        {@link com.github.phantomthief.thrift.client.pool.ThriftServerInfo} object.
      * @return a {@link org.apache.thrift.transport.TTransport} object.
      */
-    public TTransport getConnection(ThriftServerInfo thriftServerInfo);
+    TTransport getConnection(ThriftServerInfo thriftServerInfo);
 
     /**
      * <p>
@@ -36,7 +36,7 @@ public interface ThriftConnectionPoolProvider {
      * @param transport a {@link org.apache.thrift.transport.TTransport}
      *        object.
      */
-    public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
+    void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
 
     /**
      * <p>
@@ -48,6 +48,6 @@ public interface ThriftConnectionPoolProvider {
      * @param transport a {@link org.apache.thrift.transport.TTransport}
      *        object.
      */
-    public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
+    void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport);
 
 }

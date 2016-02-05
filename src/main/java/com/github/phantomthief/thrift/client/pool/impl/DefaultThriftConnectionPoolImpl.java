@@ -3,7 +3,9 @@
  */
 package com.github.phantomthief.thrift.client.pool.impl;
 
-import java.util.concurrent.TimeUnit;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.function.Function;
 
 import org.apache.commons.pool2.KeyedPooledObjectFactory;
@@ -14,6 +16,7 @@ import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
 
 import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
 import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
@@ -28,14 +31,10 @@ import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
  */
 public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPoolProvider {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
-            .getLogger(DefaultThriftConnectionPoolImpl.class);
-
+    private static final Logger logger = getLogger(DefaultThriftConnectionPoolImpl.class);
     private static final int MIN_CONN = 1;
-
     private static final int MAX_CONN = 1000;
-
-    private static final int TIMEOUT = (int) TimeUnit.MINUTES.toMillis(5);
+    private static final int TIMEOUT = (int) MINUTES.toMillis(5);
 
     private final GenericKeyedObjectPool<ThriftServerInfo, TTransport> connections;
 
@@ -69,9 +68,48 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
         this(config, info -> {
             TSocket tsocket = new TSocket(info.getHost(), info.getPort());
             tsocket.setTimeout(TIMEOUT);
-            TFramedTransport transport = new TFramedTransport(tsocket);
-            return transport;
+            return new TFramedTransport(tsocket);
         });
+    }
+
+    /**
+     * <p>
+     * getInstance.
+     * </p>
+     *
+     * @return a
+     *         {@link com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl}
+     *         object.
+     */
+    public static DefaultThriftConnectionPoolImpl getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public TTransport getConnection(ThriftServerInfo thriftServerInfo) {
+        try {
+            return connections.borrowObject(thriftServerInfo);
+        } catch (Exception e) {
+            logger.error("fail to get connection for {}", thriftServerInfo, e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
+        connections.returnObject(thriftServerInfo, transport);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
+        try {
+            connections.invalidateObject(thriftServerInfo, transport);
+        } catch (Exception e) {
+            logger.error("fail to invalid object:{},{}", thriftServerInfo, transport, e);
+        }
     }
 
     private static class LazyHolder {
@@ -84,34 +122,18 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
             config.setMaxIdlePerKey(MAX_CONN);
             config.setMinIdlePerKey(MIN_CONN);
             config.setTestOnBorrow(true);
-            config.setMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
-            config.setSoftMinEvictableIdleTimeMillis(TimeUnit.MINUTES.toMillis(1));
+            config.setMinEvictableIdleTimeMillis(MINUTES.toMillis(1));
+            config.setSoftMinEvictableIdleTimeMillis(MINUTES.toMillis(1));
             config.setJmxEnabled(false);
             INSTANCE = new DefaultThriftConnectionPoolImpl(config);
         }
     }
 
-    /**
-     * <p>
-     * getInstance.
-     * </p>
-     *
-     * @return a
-     *         {@link com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl}
-     *         object.
-     */
-    public static final DefaultThriftConnectionPoolImpl getInstance() {
-        return LazyHolder.INSTANCE;
-    }
-
     public static final class ThriftConnectionFactory implements
-            KeyedPooledObjectFactory<ThriftServerInfo, TTransport> {
+                                                     KeyedPooledObjectFactory<ThriftServerInfo, TTransport> {
 
         private final Function<ThriftServerInfo, TTransport> transportProvider;
 
-        /**
-         * @param transportProvider
-         */
         public ThriftConnectionFactory(Function<ThriftServerInfo, TTransport> transportProvider) {
             this.transportProvider = transportProvider;
         }
@@ -172,33 +194,6 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
             // do nothing
         }
 
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public TTransport getConnection(ThriftServerInfo thriftServerInfo) {
-        try {
-            return connections.borrowObject(thriftServerInfo);
-        } catch (Exception e) {
-            logger.error("fail to get connection for {}", thriftServerInfo, e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void returnConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
-        connections.returnObject(thriftServerInfo, transport);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void returnBrokenConnection(ThriftServerInfo thriftServerInfo, TTransport transport) {
-        try {
-            connections.invalidateObject(thriftServerInfo, transport);
-        } catch (Exception e) {
-            logger.error("fail to invalid object:{},{}", thriftServerInfo, transport, e);
-        }
     }
 
 }

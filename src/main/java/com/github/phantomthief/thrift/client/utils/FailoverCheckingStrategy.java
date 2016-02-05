@@ -3,12 +3,19 @@
  */
 package com.github.phantomthief.thrift.client.utils;
 
+import static com.google.common.cache.CacheBuilder.newBuilder;
+import static com.google.common.collect.EvictingQueue.create;
+import static java.lang.Boolean.TRUE;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
 
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.EvictingQueue;
@@ -23,14 +30,10 @@ import com.google.common.collect.EvictingQueue;
  */
 public class FailoverCheckingStrategy<T> {
 
-    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
-
     private static final int DEFAULT_FAIL_COUNT = 10;
-
-    private static final long DEFAULT_FAIL_DURATION = TimeUnit.MINUTES.toMillis(1);
-
-    private static final long DEFAULT_RECOVERY_DURATION = TimeUnit.MINUTES.toMillis(3);
-
+    private static final long DEFAULT_FAIL_DURATION = MINUTES.toMillis(1);
+    private static final long DEFAULT_RECOVERY_DURATION = MINUTES.toMillis(3);
+    private final Logger logger = getLogger(getClass());
     private final long failDuration;
 
     private final Cache<T, Boolean> failedList;
@@ -56,14 +59,14 @@ public class FailoverCheckingStrategy<T> {
      */
     public FailoverCheckingStrategy(int failCount, long failDuration, long recoveryDuration) {
         this.failDuration = failDuration;
-        this.failedList = CacheBuilder.newBuilder().weakKeys()
-                .expireAfterWrite(recoveryDuration, TimeUnit.MILLISECONDS).build();
-        this.failCountMap = CacheBuilder.newBuilder().weakKeys()
-                .build(new CacheLoader<T, EvictingQueue<Long>>() {
+        this.failedList = newBuilder().weakKeys().expireAfterWrite(recoveryDuration, MILLISECONDS)
+                .build();
+        this.failCountMap = newBuilder().weakKeys().build(
+                new CacheLoader<T, EvictingQueue<Long>>() {
 
                     @Override
                     public EvictingQueue<Long> load(T key) throws Exception {
-                        return EvictingQueue.create(failCount);
+                        return create(failCount);
                     }
                 });
     }
@@ -102,7 +105,7 @@ public class FailoverCheckingStrategy<T> {
             logger.error("Ops.", e);
         }
         if (addToFail) {
-            failedList.put(object, Boolean.TRUE);
+            failedList.put(object, TRUE);
             logger.trace("server {} failed. add to fail list.", object);
         }
     }

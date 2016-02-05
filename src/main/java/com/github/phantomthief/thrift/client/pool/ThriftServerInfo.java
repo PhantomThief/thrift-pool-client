@@ -32,8 +32,6 @@ public final class ThriftServerInfo {
      * <p>
      * Constructor for ThriftServerInfo.
      * </p>
-     *
-     * @param hostAndPort
      */
     private ThriftServerInfo(String hostAndPort) {
         List<String> split = splitter.splitToList(hostAndPort);
@@ -42,11 +40,11 @@ public final class ThriftServerInfo {
         this.port = Integer.parseInt(split.get(1));
     }
 
-    public static final ThriftServerInfo of(String host, int port) {
+    public static ThriftServerInfo of(String host, int port) {
         return allInfos.computeIfAbsent(host + ":" + port, ThriftServerInfo::new);
     }
 
-    public static final ThriftServerInfo of(String hostAndPort) {
+    public static ThriftServerInfo of(String hostAndPort) {
         return allInfos.computeIfAbsent(hostAndPort, ThriftServerInfo::new);
     }
 
@@ -54,8 +52,6 @@ public final class ThriftServerInfo {
      * <p>
      * Getter for the field <code>host</code>.
      * </p>
-     *
-     * @return host
      */
     public String getHost() {
         return host;
@@ -102,10 +98,7 @@ public final class ThriftServerInfo {
         } else if (!host.equals(other.host)) {
             return false;
         }
-        if (port != other.port) {
-            return false;
-        }
-        return true;
+        return port == other.port;
     }
 
     /** {@inheritDoc} */

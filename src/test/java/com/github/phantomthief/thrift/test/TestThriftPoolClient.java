@@ -1,27 +1,31 @@
 /**
- * 
+ *
  */
 package com.github.phantomthief.thrift.test;
+
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import com.github.phantomthief.thrift.client.impl.ThriftClientImpl;
 import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
 import com.github.phantomthief.thrift.test.service.TestThriftService.Client;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * @author w.vela
  */
 public class TestThriftPoolClient {
 
-    private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
 
     @Test
     public void testEcho() throws InterruptedException {
@@ -49,7 +53,6 @@ public class TestThriftPoolClient {
             });
         }
 
-        executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.MINUTES);
+        MoreExecutors.shutdownAndAwaitTermination(executorService, 1, MINUTES);
     }
 }

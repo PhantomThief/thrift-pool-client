@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javassist.util.proxy.Proxy;
-import javassist.util.proxy.ProxyFactory;
-
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -22,6 +19,9 @@ import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
 import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
 import com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
 import com.github.phantomthief.thrift.client.utils.ThriftClientUtils;
+
+import javassist.util.proxy.Proxy;
+import javassist.util.proxy.ProxyFactory;
 
 /**
  * <p>
