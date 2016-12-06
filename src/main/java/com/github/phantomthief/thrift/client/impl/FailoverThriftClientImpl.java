@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.thrift.TServiceClient;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
@@ -19,6 +20,7 @@ import com.github.phantomthief.thrift.client.pool.ThriftConnectionPoolProvider;
 import com.github.phantomthief.thrift.client.pool.ThriftServerInfo;
 import com.github.phantomthief.thrift.client.pool.impl.DefaultThriftConnectionPoolImpl;
 import com.github.phantomthief.thrift.client.utils.FailoverCheckingStrategy;
+import com.github.phantomthief.thrift.client.utils.ThriftClientUtils;
 
 /**
  * <p>
@@ -93,6 +95,25 @@ public class FailoverThriftClientImpl implements ThriftClient {
     public <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash) {
         return thriftClient.iface(ifaceClass, protocolProvider, hash);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName) {
+        return thriftClient.mpiface(ifaceClass, serviceName, ThriftClientUtils.randomNextInt());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName, int hash) {
+        return thriftClient.mpiface(ifaceClass, serviceName, TBinaryProtocol::new, hash);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName,
+        Function<TTransport, TProtocol> protocolProvider, int hash) {
+        return thriftClient.mpiface(ifaceClass, serviceName, protocolProvider, hash);
     }
 
     /* (non-Javadoc)

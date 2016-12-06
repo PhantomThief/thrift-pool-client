@@ -45,4 +45,35 @@ public interface ThriftClient {
     <X extends TServiceClient> X iface(Class<X> ifaceClass,
             Function<TTransport, TProtocol> protocolProvider, int hash);
 
+    /**
+     * <p>mpiface.</p>
+     *
+     * @param ifaceClass the {@link java.lang.Class} of the TServiceClient.
+     * @param serviceName the {@link java.lang.String} name of the service.
+     * @return a X object.
+     */
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName);
+
+    /**
+     * <p>mpiface.</p>
+     *
+     * @param ifaceClass the {@link java.lang.Class} of the TServiceClient.
+     * @param serviceName the {@link java.lang.String} name of the service.
+     * @param hash a int.
+     * @return a X object.
+     */
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName, int hash);
+
+    /**
+     * <p>mpiface.</p>
+     *
+     * @param ifaceClass the {@link java.lang.Class} of the TServiceClient.
+     * @param serviceName the {@link java.lang.String} name of the service.
+     * @param protocolProvider a {@link java.util.function.Function} object.
+     * @param hash a int.
+     * @return a X object.
+     */
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName,
+            Function<TTransport, TProtocol> protocolProvider, int hash);
+
 }
