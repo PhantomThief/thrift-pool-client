@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
@@ -137,6 +138,44 @@ public class ThriftClientImpl implements ThriftClient {
                 | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("fail to create proxy.", e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * mpiface.
+     * </p>
+     */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName) {
+        return mpiface(ifaceClass, serviceName, ThriftClientUtils.randomNextInt());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * mpiface.
+     * </p>
+     */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName, int hash) {
+        return mpiface(ifaceClass, serviceName, TCompactProtocol::new, hash);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>
+     * mpiface.
+     * </p>
+     */
+    @Override
+    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName,
+        Function<TTransport, TProtocol> protocolProvider, int hash) {
+        return iface(ifaceClass,
+            protocolProvider.andThen((p) -> new TMultiplexedProtocol(p, serviceName)), hash);
     }
 
 }
