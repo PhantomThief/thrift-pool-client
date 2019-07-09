@@ -49,9 +49,9 @@ public final class ThriftClientUtils {
      * @return a {@link java.util.Set} object.
      */
     public static Set<String> getInterfaceMethodNames(Class<?> ifaceClass) {
-        return interfaceMethodCache.computeIfAbsent(ifaceClass, i -> of(i.getInterfaces()) //
-                .flatMap(c -> of(c.getMethods())) //
-                .map(Method::getName) //
+        return interfaceMethodCache.computeIfAbsent(ifaceClass, i -> of(i.getInterfaces())
+                .flatMap(c -> of(c.getMethods()))
+                .map(Method::getName)
                 .collect(toSet()));
     }
 }

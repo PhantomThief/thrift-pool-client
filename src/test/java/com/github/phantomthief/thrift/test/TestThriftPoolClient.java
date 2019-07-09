@@ -31,9 +31,9 @@ public class TestThriftPoolClient {
     public void testEcho() throws InterruptedException {
 
         // define serverList provider, you can use dynamic provider here to impl on the fly changing...
-        Supplier<List<ThriftServerInfo>> serverListProvider = () -> Arrays.asList( //
-                ThriftServerInfo.of("127.0.0.1", 9092), //
-                ThriftServerInfo.of("127.0.0.1", 9091), //
+        Supplier<List<ThriftServerInfo>> serverListProvider = () -> Arrays.asList(
+                ThriftServerInfo.of("127.0.0.1", 9092),
+                ThriftServerInfo.of("127.0.0.1", 9091),
                 ThriftServerInfo.of("127.0.0.1", 9090));
 
         // init pool client
