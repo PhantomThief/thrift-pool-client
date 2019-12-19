@@ -52,7 +52,7 @@ public interface ThriftClient {
      * @param serviceName the {@link java.lang.String} name of the service.
      * @return a X object.
      */
-    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName);
+    <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName);
 
     /**
      * <p>mpiface.</p>
@@ -62,7 +62,7 @@ public interface ThriftClient {
      * @param hash a int.
      * @return a X object.
      */
-    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName, int hash);
+    <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName, int hash);
 
     /**
      * <p>mpiface.</p>
@@ -73,7 +73,7 @@ public interface ThriftClient {
      * @param hash a int.
      * @return a X object.
      */
-    public <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName,
+    <X extends TServiceClient> X mpiface(Class<X> ifaceClass, String serviceName,
             Function<TTransport, TProtocol> protocolProvider, int hash);
 
 }
