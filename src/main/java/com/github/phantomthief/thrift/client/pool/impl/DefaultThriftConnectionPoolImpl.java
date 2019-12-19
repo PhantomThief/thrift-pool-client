@@ -154,8 +154,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
          * @see org.apache.commons.pool2.PooledObjectFactory#destroyObject(org.apache.commons.pool2.PooledObject)
          */
         @Override
-        public void destroyObject(ThriftServerInfo info, PooledObject<TTransport> p)
-                throws Exception {
+        public void destroyObject(ThriftServerInfo info, PooledObject<TTransport> p) {
             TTransport transport = p.getObject();
             if (transport != null && transport.isOpen()) {
                 transport.close();
@@ -180,8 +179,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
          * @see org.apache.commons.pool2.PooledObjectFactory#activateObject(org.apache.commons.pool2.PooledObject)
          */
         @Override
-        public void activateObject(ThriftServerInfo info, PooledObject<TTransport> p)
-                throws Exception {
+        public void activateObject(ThriftServerInfo info, PooledObject<TTransport> p) {
             // do nothing
         }
 
@@ -189,8 +187,7 @@ public final class DefaultThriftConnectionPoolImpl implements ThriftConnectionPo
          * @see org.apache.commons.pool2.PooledObjectFactory#passivateObject(org.apache.commons.pool2.PooledObject)
          */
         @Override
-        public void passivateObject(ThriftServerInfo info, PooledObject<TTransport> p)
-                throws Exception {
+        public void passivateObject(ThriftServerInfo info, PooledObject<TTransport> p) {
             // do nothing
         }
 

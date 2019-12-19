@@ -120,7 +120,7 @@ public class FailoverThriftClientImpl implements ThriftClient {
      * @see com.github.phantomthief.thrift.client.ThriftClient#iface(java.lang.Class, java.util.function.Function, int)
      */
 
-    private class FailoverStrategy implements
+    private static class FailoverStrategy implements
                                  Supplier<List<ThriftServerInfo>>,
                                  ThriftConnectionPoolProvider {
 

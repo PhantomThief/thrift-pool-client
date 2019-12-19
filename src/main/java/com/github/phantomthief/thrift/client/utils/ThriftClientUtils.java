@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class ThriftClientUtils {
 
     private static final Random RANDOM = new Random();
-    private static ConcurrentMap<Class<?>, Set<String>> interfaceMethodCache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, Set<String>> interfaceMethodCache = new ConcurrentHashMap<>();
 
     private ThriftClientUtils() {
         throw new UnsupportedOperationException();

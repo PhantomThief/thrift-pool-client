@@ -19,10 +19,10 @@ import com.google.common.collect.MapMaker;
  */
 public final class ThriftServerInfo {
 
-    private static ConcurrentMap<String, ThriftServerInfo> allInfos = new MapMaker().weakValues()
+    private static final ConcurrentMap<String, ThriftServerInfo> allInfos = new MapMaker().weakValues()
             .makeMap();
 
-    private static Splitter splitter = Splitter.on(':');
+    private static final Splitter splitter = Splitter.on(':');
 
     private final String host;
 

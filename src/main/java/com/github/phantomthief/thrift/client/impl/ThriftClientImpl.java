@@ -105,7 +105,7 @@ public class ThriftClientImpl implements ThriftClient {
             throw new NoBackendException();
         }
         hash = Math.abs(hash);
-        hash = hash < 0 ? 0 : hash;
+        hash = Math.max(hash, 0);
         ThriftServerInfo selected = servers.get(hash % servers.size());
         logger.trace("get connection for [{}]->{} with hash:{}", ifaceClass, selected, hash);
 

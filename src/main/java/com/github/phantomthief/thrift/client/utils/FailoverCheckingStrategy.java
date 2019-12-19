@@ -65,7 +65,7 @@ public class FailoverCheckingStrategy<T> {
                 new CacheLoader<T, EvictingQueue<Long>>() {
 
                     @Override
-                    public EvictingQueue<Long> load(T key) throws Exception {
+                    public EvictingQueue<Long> load(T key) {
                         return create(failCount);
                     }
                 });
